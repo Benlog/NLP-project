@@ -173,7 +173,7 @@ cython_debug/
 
 ### VisualStudioCode ###
 .vscode/*
-.code-workspace
+*.code-workspace
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
