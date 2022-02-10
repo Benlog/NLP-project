@@ -31,4 +31,3 @@ def load_json_iter(path : "PathLike") -> "iter(dict)" :
             if entry.name[-5:] == ".json" and entry.is_file():
                 with open(entry.path, "r", encoding="utf-8") as file :
                     yield json.load(file)
-    
