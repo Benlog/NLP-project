@@ -1,9 +1,10 @@
-import torch
-from torch.jit import script, trace
-import torch.nn as nn
-from torch import optim
-import torch.nn.functional as F
 import os
+
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from torch import optim
+from torch.jit import script, trace
 
 #pylint: disable=no-member
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -15,8 +16,19 @@ class discrimNN(nn.Module):
     '''
 
     def __init__(self, in_size, mem_size):
-        super(discrimNN, self).__init__()
+        super().__init__()
+        self.gru = nn.GRU(in_size, mem_size)
+        self.end_lin = torch.nn.Linear(mem_size, 1)
+        self.lin = nn.Sequential(
+            torch.nn.Linear(mem_size, mem_size),
+            nn.Hardtanh(),
+            torch.nn.Linear(mem_size, mem_size),
+            nn.Hardtanh(),
+            torch.nn.Linear(mem_size, 1),
+            nn.Hardtanh()
+        )
 
     def forward(self, x):
-        x = F.relu(self.conv1(x))
-        return F.relu(self.conv2(x))
+        _, x = self.gru(x)
+        x = self.lin(x)
+        return x
