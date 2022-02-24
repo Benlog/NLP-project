@@ -43,7 +43,7 @@ def load_json_iter(path: Path) -> Iterator[dict]:
     for item in path.iterdir():
         if item.name[-5:] == ".json" and item.is_file():
             with item.open("r", encoding="utf-8") as file:
-                    yield json.load(file)
+                yield json.load(file)
 
 
 class JSONDataset(IterableDataset):
@@ -54,27 +54,3 @@ class JSONDataset(IterableDataset):
 
     def __iter__(self):
         return (self.tokenize_fn(i["text"]) for i in load_json_iter(self.source))
-
-
-
-def load_json(path : "PathLike") -> "list(dict)" :
-    r = []
-    with scandir(path) as it:
-        for entry in it:
-            if entry.name[-5:] == ".json" and entry.is_file():
-                with open(entry.path, "r", encoding="utf-8") as file :
-                    r.append(json.load(file))
-    return r
-
-
-def load_json_iter(path: Path) -> Iterator[dict]:
-    # with scandir(path) as it:
-    #     for entry in it:
-    #         if entry.name[-5:] == ".json" and entry.is_file():
-    #             with open(entry.path, "r", encoding="utf-8") as file :
-    #                 yield json.load(file)
-
-    for item in path.iterdir():
-        if item.name[-5:] == ".json" and item.is_file():
-            with item.open("r", encoding="utf-8") as file:
-                    yield json.load(file)
