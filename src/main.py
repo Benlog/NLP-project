@@ -20,17 +20,18 @@ def main():
 
     dataset = JSONDataset(data, min_length=50, vector_length=100)
 
-    loader = DataLoader(dataset, batch_size=10, pin_memory=True)
+    loader = DataLoader(dataset, batch_size=10, collate_fn=lambda x: torch.tensor(x, dtype=torch.float), pin_memory=True)
 
     loader_iter = iter(loader)
 
     data1 = next(loader_iter)
+    #print(data1)
     print(data1.size())
-    print(torch.tensor(data1).size())
 
     nn = discrimNN(129, 10)
     ft = nn.forward(data1)
 
     print(ft)
+    print(ft.size())
 
     print("Done")

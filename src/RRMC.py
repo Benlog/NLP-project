@@ -17,9 +17,8 @@ class discrimNN(nn.Module):
 
     def __init__(self, in_size, mem_size):
         super().__init__()
-        self.gru = nn.GRU(in_size, mem_size)
-        self.end_lin = torch.nn.Linear(mem_size, 1)
-        self.lin = nn.Sequential(
+        self.gru = nn.GRU(in_size, mem_size, batch_first=True)
+        self.trilin = nn.Sequential(
             torch.nn.Linear(mem_size, mem_size),
             nn.Hardtanh(),
             torch.nn.Linear(mem_size, mem_size),
@@ -30,5 +29,6 @@ class discrimNN(nn.Module):
 
     def forward(self, x):
         _, x = self.gru(x)
-        x = self.lin(x)
-        return x
+        x = x.reshape(-1, self.gru.hidden_size)
+        x = self.trilin(x)
+        return x.reshape(-1)
